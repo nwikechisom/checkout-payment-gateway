@@ -104,6 +104,7 @@ public class PaymentsControllerTests(WebApplicationFactory<Program> factory)
         var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
 
         // Act
+        _client.DefaultRequestHeaders.Add("Idempotency-Key", "076584567201");
         var response = await _client.PostAsync("api/payments", content);
 
         // Assert

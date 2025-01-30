@@ -20,9 +20,13 @@ public class PaymentsController(IPaymentsService paymentsService) : Controller
     }
     
     [HttpPost]
-    public async Task<ActionResult<PostPaymentResponse?>> PostPayment([FromBody]PostPaymentRequest request)
+    public async Task<ActionResult<PostPaymentResponse?>> PostPayment([FromBody]PostPaymentRequest request, [FromHeader(Name = "Idempotency-Key")] string? idempotencyKey)
     {
-        var payment = await paymentsService.PostPayment(request);
+        if (string.IsNullOrEmpty(idempotencyKey))
+        {
+            return BadRequest("Idempotency-Key header is required.");
+        }
+        var payment = await paymentsService.PostPayment(request, idempotencyKey);
         if (payment.Status != PaymentStatus.Authorized.ToString()) 
             return new BadRequestObjectResult(payment);
         return new OkObjectResult(payment);

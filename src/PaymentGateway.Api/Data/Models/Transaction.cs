@@ -13,6 +13,7 @@ public class Transaction
     public string Merchant { get; set; }
     public string Currency { get; set; }
     // public string Description { get; set; }
+    public string Reference {get; set;}
     public int CardNumberLastFour { get; set; }
     public int ExpiryMonth { get; set; }
     public int ExpiryYear { get; set; }

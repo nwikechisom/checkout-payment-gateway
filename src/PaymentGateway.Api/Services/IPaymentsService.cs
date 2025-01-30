@@ -5,6 +5,6 @@ namespace PaymentGateway.Api.Services;
 
 public interface IPaymentsService
 {
-    Task<PostPaymentResponse> PostPayment(PostPaymentRequest request);
+    Task<PostPaymentResponse> PostPayment(PostPaymentRequest request, string idempotencyKey);
     PostPaymentResponse GetPayment(Guid id);
 }

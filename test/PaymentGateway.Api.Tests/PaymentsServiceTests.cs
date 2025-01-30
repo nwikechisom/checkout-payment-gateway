@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using System.Net;
 using System.Text.Json;
 using AutoMapper;
@@ -12,7 +13,6 @@ using PaymentGateway.Api.Enums;
 using PaymentGateway.Api.Models.Requests;
 using PaymentGateway.Api.Models.Responses;
 using PaymentGateway.Api.Services;
-using PaymentGateway.Api.Utils;
 
 namespace PaymentGateway.Api.Tests;
 
@@ -50,6 +50,7 @@ public class PaymentsServiceTests
         _validatorMock.Setup(v => v.Validate(request))
             .Returns(new ValidationResult(validationFailures));
         _mapperMock.Setup(m => m.Map<Transaction>(request)).Returns(transaction);
+        _repositoryMock.Setup(r => r.Find(It.IsAny<Expression<Func<Transaction, bool>>>())).Returns<Transaction>(null);
         _repositoryMock.Setup(r => r.Add(It.IsAny<Transaction>())).ReturnsAsync(transaction);
         _mapperMock.Setup(m => m.Map<PostPaymentResponse>(transaction)).Returns(new PostPaymentResponse
         {    
@@ -60,7 +61,7 @@ public class PaymentsServiceTests
         });
 
         // Act
-        var response = await _service.PostPayment(request);
+        var response = await _service.PostPayment(request, "20y796857");
 
         // Assert
         Assert.Equal(PaymentStatus.Rejected, transaction.Status);
@@ -77,6 +78,7 @@ public class PaymentsServiceTests
             .Returns(new ValidationResult());
 
         _mapperMock.Setup(m => m.Map<Transaction>(request)).Returns(transaction);
+        _repositoryMock.Setup(r => r.Find(It.IsAny<Expression<Func<Transaction, bool>>>())).Returns<Transaction>(null);
         _repositoryMock.Setup(r => r.Add(It.IsAny<Transaction>())).ReturnsAsync(transaction);
         _mapperMock.Setup(m => m.Map<PostPaymentResponse>(transaction)).Returns(new PostPaymentResponse
         {    
@@ -103,7 +105,7 @@ public class PaymentsServiceTests
         typeof(PaymentsService).GetField("_httpClient", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(_service, client);
 
         // Act
-        var response = await _service.PostPayment(request);
+        var response = await _service.PostPayment(request, "20y796857");
 
         // Assert
         Assert.Equal(PaymentStatus.Declined, transaction.Status);
@@ -120,6 +122,7 @@ public class PaymentsServiceTests
             .Returns(new ValidationResult());
 
         _mapperMock.Setup(m => m.Map<Transaction>(request)).Returns(transaction);
+        _repositoryMock.Setup(r => r.Find(It.IsAny<Expression<Func<Transaction, bool>>>())).Returns<Transaction>(null);
         _repositoryMock.Setup(r => r.Add(It.IsAny<Transaction>())).ReturnsAsync(transaction);
         _mapperMock.Setup(m => m.Map<PostPaymentResponse>(transaction)).Returns(new PostPaymentResponse
         {    
@@ -146,7 +149,7 @@ public class PaymentsServiceTests
         typeof(PaymentsService).GetField("_httpClient", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(_service, client);
 
         // Act
-        var response = await _service.PostPayment(request);
+        var response = await _service.PostPayment(request, "7654");
 
         // Assert
         Assert.Equal(PaymentStatus.Authorized, transaction.Status);
@@ -192,11 +195,11 @@ public class PaymentsServiceTests
         // Arrange
         var request = new PostPaymentRequest();
     
-        // Simulate a mapping failure
+        _repositoryMock.Setup(r => r.Find(It.IsAny<Expression<Func<Transaction, bool>>>())).Returns<Transaction>(null);
         _mapperMock.Setup(m => m.Map<Transaction>(request)).Throws(new AutoMapperMappingException("Mapping failed"));
 
         // Act
-        var response = await _service.PostPayment(request);
+        var response = await _service.PostPayment(request, "079865");
 
         // Assert
         Assert.Equal(PaymentStatus.Rejected.ToString(), response.Status);
@@ -214,6 +217,7 @@ public class PaymentsServiceTests
         var transaction = new Transaction();
         _mapperMock.Setup(m => m.Map<Transaction>(request)).Returns(transaction);
         _repositoryMock.Setup(r => r.Add(It.IsAny<Transaction>())).ReturnsAsync(transaction);
+        _repositoryMock.Setup(r => r.Find(It.IsAny<Expression<Func<Transaction, bool>>>())).Returns<Transaction>(null);
 
         // Mock HttpClient to throw HttpRequestException
         var httpClientMock = new Mock<HttpMessageHandler>();
@@ -229,7 +233,7 @@ public class PaymentsServiceTests
         typeof(PaymentsService).GetField("_httpClient", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(_service, client);
 
         // Act
-        var response = await _service.PostPayment(request);
+        var response = await _service.PostPayment(request, "0766969");
 
         // Assert
         Assert.Equal(PaymentStatus.Rejected.ToString(), response.Status);
@@ -247,6 +251,7 @@ public class PaymentsServiceTests
         var transaction = new Transaction();
         _mapperMock.Setup(m => m.Map<Transaction>(request)).Returns(transaction);
         _repositoryMock.Setup(r => r.Add(It.IsAny<Transaction>())).ReturnsAsync(transaction);
+        _repositoryMock.Setup(r => r.Find(It.IsAny<Expression<Func<Transaction, bool>>>())).Returns<Transaction>(null);
 
         // Mock HttpClient to return a bad JSON response
         var httpResponse = new HttpResponseMessage(HttpStatusCode.OK)
@@ -267,7 +272,7 @@ public class PaymentsServiceTests
         typeof(PaymentsService).GetField("_httpClient", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(_service, client);
 
         // Act
-        var response = await _service.PostPayment(request);
+        var response = await _service.PostPayment(request, "348489930");
 
         // Assert
         Assert.Equal(PaymentStatus.Rejected.ToString(), response.Status);

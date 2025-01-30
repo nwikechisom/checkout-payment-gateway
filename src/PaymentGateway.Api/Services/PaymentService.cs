@@ -17,11 +17,17 @@ public class PaymentsService(IOptions<MounteBankConfig> options,
     private readonly MounteBankConfig _bankConfig = options.Value;
     private readonly HttpClient _httpClient = new();
     
-    public async Task<PostPaymentResponse> PostPayment(PostPaymentRequest request)
+    public async Task<PostPaymentResponse> PostPayment(PostPaymentRequest request, string idempotencyKey)
 {
     try
     {
+        var existingTransaction = paymentsRepository.Find(t => t.Reference == idempotencyKey).FirstOrDefault();
+        if (existingTransaction != null)
+        {
+            return mapper.Map<PostPaymentResponse>(existingTransaction);
+        }
         var mapping = mapper.Map<Transaction>(request);
+        mapping.Reference = idempotencyKey;
         var transaction = await paymentsRepository.Add(mapping);
         
         // Validate the request

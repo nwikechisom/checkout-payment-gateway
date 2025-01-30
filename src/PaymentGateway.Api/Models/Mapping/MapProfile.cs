@@ -15,6 +15,7 @@ public class MapProfile : Profile
         CreateMap<PostPaymentRequest, Transaction>()
             .ForMember(t => t.Id, t => t.Ignore())
             .ForMember(t => t.Status, t => t.Ignore())
+            .ForMember(t => t.Reference, t => t.Ignore())
             .ForMember(t => t.Amount, t => t.MapFrom(p => p.Amount.ToMinorCurrencyUnit()))
             .ForMember(t => t.Currency, t => t.MapFrom(p => p.Currency))
             .ForMember(t => t.Merchant, t => t.MapFrom(p => p.MerchantId))
