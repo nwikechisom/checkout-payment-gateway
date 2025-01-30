@@ -9,7 +9,7 @@ public class Transaction
 {
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; set; }
-    public int Amount { get; set; }
+    public decimal Amount { get; set; }
     public string Merchant { get; set; }
     public string Currency { get; set; }
     // public string Description { get; set; }

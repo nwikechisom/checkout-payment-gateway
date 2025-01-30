@@ -16,7 +16,7 @@ public class MapProfile : Profile
             .ForMember(t => t.Id, t => t.Ignore())
             .ForMember(t => t.Status, t => t.Ignore())
             .ForMember(t => t.Reference, t => t.Ignore())
-            .ForMember(t => t.Amount, t => t.MapFrom(p => p.Amount.ToMinorCurrencyUnit()))
+            .ForMember(t => t.Amount, t => t.MapFrom(p => p.Amount.ToMajorCurrencyUnit()))
             .ForMember(t => t.Currency, t => t.MapFrom(p => p.Currency))
             .ForMember(t => t.Merchant, t => t.MapFrom(p => p.MerchantId))
             .ForMember(t => t.CardNumberLastFour, t => t.MapFrom(p => p.CardNumber.GetLastFourDigits()))
@@ -32,7 +32,7 @@ public class MapProfile : Profile
             .ForMember(p => p.Status, p => p.MapFrom(t => t.Status.ToString()))
             .ForMember(p => p.ResponseMessage, p => p.Ignore());
         CreateMap<PostPaymentRequest, MountebankRequest>()
-            .ForMember(m => m.Amount, p => p.MapFrom(p => p.Amount.ToMinorCurrencyUnit()))
+            .ForMember(m => m.Amount, p => p.MapFrom(p => p.Amount))
             .ForMember(m => m.Cvv, p => p.MapFrom(p => p.Cvv))
             .ForMember(m => m.CardNumber, p => p.MapFrom(p => p.CardNumber))
             .ForMember(m => m.ExpiryDate, p => p.MapFrom(p => Utilities.GenerateExpiryDate(p.ExpiryYear, p.ExpiryMonth)))

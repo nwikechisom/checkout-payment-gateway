@@ -27,7 +27,7 @@ public class MapProfileTests
         // Arrange
         var request = new PostPaymentRequest
         {
-            Amount = 100.75M,
+            Amount = 10075,
             Currency = "USD",
             MerchantId = "12345",
             CardNumber = "1234567812345678",
@@ -41,7 +41,7 @@ public class MapProfileTests
 
         // Assert
         Assert.NotNull(transaction);
-        Assert.Equal(10075, transaction.Amount);
+        Assert.Equal(100.75M, transaction.Amount);
         Assert.Equal("USD", transaction.Currency);
         Assert.Equal("12345", transaction.Merchant);
         Assert.Equal(5678, transaction.CardNumberLastFour);
@@ -85,7 +85,7 @@ public class MapProfileTests
         // Arrange
         var request = new PostPaymentRequest
         {
-            Amount = 100.75M,
+            Amount = 10075,
             Currency = "USD",
             CardNumber = "1234567812345678",
             ExpiryMonth = 12,

@@ -92,7 +92,7 @@ public class ValidationTests
             ExpiryMonth = 12,
             ExpiryYear = DateTime.Now.Year + 1,
             Currency = "USD",
-            Amount = 100.00m,
+            Amount = 100,
             Cvv = 123
         };
 

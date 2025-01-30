@@ -98,7 +98,7 @@ public class PaymentsControllerTests(WebApplicationFactory<Program> factory)
             ExpiryMonth = 4,
             ExpiryYear = 2025,
             Currency = "GBP",
-            Amount = 1,
+            Amount = 100,
             Cvv = 123
         };
         var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
@@ -126,7 +126,7 @@ public class PaymentsControllerTests(WebApplicationFactory<Program> factory)
             ExpiryMonth = 1,
             ExpiryYear = 2026,
             Currency = "USD",
-            Amount = 600,
+            Amount = 60000,
             Cvv = 456
         };
         var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");

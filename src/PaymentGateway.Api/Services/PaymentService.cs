@@ -47,8 +47,14 @@ public class PaymentsService(IOptions<MounteBankConfig> options,
         var result = await _httpClient
             .PostAsJsonAsync(_bankConfig.BaseUrl + _bankConfig.PostPaymentEndpoint, mounteBankRequest);
         var stringResult = await result.Content.ReadAsStringAsync();
-        result.EnsureSuccessStatusCode(); 
-        // var stringResult = await result.Content.ReadAsStringAsync();
+        if (!result.IsSuccessStatusCode)
+        {
+            transaction.Status = PaymentStatus.Rejected;
+            await paymentsRepository.Update(transaction);
+            var rejectedResponse = mapper.Map<PostPaymentResponse>(transaction);
+            rejectedResponse.ResponseMessage = "Request type not supported";
+            return rejectedResponse;
+        }
         var mountebankResponse = JsonSerializer.Deserialize<MountebankResponse>(stringResult);
 
         if (mountebankResponse?.Authorized == false)
