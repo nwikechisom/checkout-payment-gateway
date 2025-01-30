@@ -130,7 +130,7 @@ public class PaymentsControllerTests(WebApplicationFactory<Program> factory)
             Cvv = 456
         };
         var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-
+        _client.DefaultRequestHeaders.Add("Idempotency-Key", "076584567201");
         // Act
         var response = await _client.PostAsync("api/payments", content);
 
@@ -156,7 +156,7 @@ public class PaymentsControllerTests(WebApplicationFactory<Program> factory)
             Cvv = 123
         };
         var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-
+        _client.DefaultRequestHeaders.Add("Idempotency-Key", "076584567201");
         // Act
         var response = await _client.PostAsync("api/payments", content);
 

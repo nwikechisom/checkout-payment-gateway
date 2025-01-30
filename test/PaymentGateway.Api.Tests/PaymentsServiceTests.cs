@@ -50,7 +50,7 @@ public class PaymentsServiceTests
         _validatorMock.Setup(v => v.Validate(request))
             .Returns(new ValidationResult(validationFailures));
         _mapperMock.Setup(m => m.Map<Transaction>(request)).Returns(transaction);
-        _repositoryMock.Setup(r => r.Find(It.IsAny<Expression<Func<Transaction, bool>>>())).Returns<Transaction>(null);
+        _repositoryMock.Setup(r => r.Find(It.IsAny<Expression<Func<Transaction, bool>>>())).Returns(new List<Transaction>().AsEnumerable());
         _repositoryMock.Setup(r => r.Add(It.IsAny<Transaction>())).ReturnsAsync(transaction);
         _mapperMock.Setup(m => m.Map<PostPaymentResponse>(transaction)).Returns(new PostPaymentResponse
         {    
@@ -78,7 +78,7 @@ public class PaymentsServiceTests
             .Returns(new ValidationResult());
 
         _mapperMock.Setup(m => m.Map<Transaction>(request)).Returns(transaction);
-        _repositoryMock.Setup(r => r.Find(It.IsAny<Expression<Func<Transaction, bool>>>())).Returns<Transaction>(null);
+        _repositoryMock.Setup(r => r.Find(It.IsAny<Expression<Func<Transaction, bool>>>())).Returns(new List<Transaction>().AsEnumerable());
         _repositoryMock.Setup(r => r.Add(It.IsAny<Transaction>())).ReturnsAsync(transaction);
         _mapperMock.Setup(m => m.Map<PostPaymentResponse>(transaction)).Returns(new PostPaymentResponse
         {    
@@ -122,7 +122,7 @@ public class PaymentsServiceTests
             .Returns(new ValidationResult());
 
         _mapperMock.Setup(m => m.Map<Transaction>(request)).Returns(transaction);
-        _repositoryMock.Setup(r => r.Find(It.IsAny<Expression<Func<Transaction, bool>>>())).Returns<Transaction>(null);
+        _repositoryMock.Setup(r => r.Find(It.IsAny<Expression<Func<Transaction, bool>>>())).Returns(new List<Transaction>().AsEnumerable());
         _repositoryMock.Setup(r => r.Add(It.IsAny<Transaction>())).ReturnsAsync(transaction);
         _mapperMock.Setup(m => m.Map<PostPaymentResponse>(transaction)).Returns(new PostPaymentResponse
         {    
@@ -195,7 +195,7 @@ public class PaymentsServiceTests
         // Arrange
         var request = new PostPaymentRequest();
     
-        _repositoryMock.Setup(r => r.Find(It.IsAny<Expression<Func<Transaction, bool>>>())).Returns<Transaction>(null);
+        _repositoryMock.Setup(r => r.Find(It.IsAny<Expression<Func<Transaction, bool>>>())).Returns(new List<Transaction>().AsEnumerable());
         _mapperMock.Setup(m => m.Map<Transaction>(request)).Throws(new AutoMapperMappingException("Mapping failed"));
 
         // Act
@@ -217,7 +217,7 @@ public class PaymentsServiceTests
         var transaction = new Transaction();
         _mapperMock.Setup(m => m.Map<Transaction>(request)).Returns(transaction);
         _repositoryMock.Setup(r => r.Add(It.IsAny<Transaction>())).ReturnsAsync(transaction);
-        _repositoryMock.Setup(r => r.Find(It.IsAny<Expression<Func<Transaction, bool>>>())).Returns<Transaction>(null);
+        _repositoryMock.Setup(r => r.Find(It.IsAny<Expression<Func<Transaction, bool>>>())).Returns(new List<Transaction>().AsEnumerable());
 
         // Mock HttpClient to throw HttpRequestException
         var httpClientMock = new Mock<HttpMessageHandler>();
@@ -251,7 +251,7 @@ public class PaymentsServiceTests
         var transaction = new Transaction();
         _mapperMock.Setup(m => m.Map<Transaction>(request)).Returns(transaction);
         _repositoryMock.Setup(r => r.Add(It.IsAny<Transaction>())).ReturnsAsync(transaction);
-        _repositoryMock.Setup(r => r.Find(It.IsAny<Expression<Func<Transaction, bool>>>())).Returns<Transaction>(null);
+        _repositoryMock.Setup(r => r.Find(It.IsAny<Expression<Func<Transaction, bool>>>())).Returns(new List<Transaction>().AsEnumerable());
 
         // Mock HttpClient to return a bad JSON response
         var httpResponse = new HttpResponseMessage(HttpStatusCode.OK)
